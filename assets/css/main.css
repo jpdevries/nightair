@@ -1,33 +1,65 @@
+body {
+  background: #080808;
+  overflow: hidden;
+  background: linear-gradient(to bottom, #080808, #080808 50%, #162c07 50%, #162c07);
+  background-size: 100% 4px; }
+
 .digit.separator {
-  animation: blink 2s step-start 0s infinite; }
+  -webkit-animation: blink 2s step-start 0s infinite;
+          animation: blink 2s step-start 0s infinite; }
+
+@-webkit-keyframes blink {
+  50% {
+    visibility: hidden; } }
 
 @keyframes blink {
   50% {
     visibility: hidden; } }
 
-.digits {
+#digits {
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   font-size: 8vw;
+  background: linear-gradient(to bottom, black 0%, transparent 50%, black 100%);
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0; }
-  .digits > div:not(.digit) {
+  #digits > div:not(.digit) {
+    display: -webkit-flex;
+    display: -ms-flexbox;
     display: flex;
-    justify-content: center; }
+    -webkit-justify-content: center;
+        -ms-flex-pack: center;
+            justify-content: center; }
 
 .digit {
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center;
-  flex-grow: 0;
-  flex-basis: 14vw;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+          flex-grow: 0;
+  -webkit-flex-basis: 14vw;
+      -ms-flex-preferred-size: 14vw;
+          flex-basis: 14vw;
   position: relative;
   margin-right: -0.25em; }
   .digit.separator {
-    flex-basis: 0.42em;
-    transform: scale(2); }
+    -webkit-flex-basis: 0.42em;
+        -ms-flex-preferred-size: 0.42em;
+            flex-basis: 0.42em;
+    -webkit-transform: scale(2);
+        -ms-transform: scale(2);
+            transform: scale(2); }
   .digit .blur {
     position: absolute;
     top: 0;
@@ -36,7 +68,9 @@
     right: 0;
     height: 100%; }
   .digit svg {
-    fill: red;
-    outline: green;
-    transform: scale(1.4);
+    fill: #86f23b;
+    outline: #86f23b;
+    -webkit-transform: scale(1.4);
+        -ms-transform: scale(1.4);
+            transform: scale(1.4);
     width: 100%; }

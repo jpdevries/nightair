@@ -1,4 +1,18 @@
+$black:rgb(8,8,8);
+$green:#86f23b;
+
 body {
+  background:$black;
+  overflow:hidden;
+
+  background: linear-gradient(
+    to bottom,
+    $black,
+    $black 50%,
+    #162c07 50%,
+    #162c07
+  );
+  background-size: 100% 4px; // The rectangle in which to repeat. It can be fully wide in this case
 }
 
 %blink {
@@ -10,10 +24,12 @@ body {
   }
 }
 
-.digits {
+#digits {
   display:flex;
   justify-content:center;
   font-size:8vw;
+
+  background:linear-gradient(to bottom, rgba(0,0,0,1) 0%,rgba(0,0,0,0) 50%,rgba(0,0,0,1) 100%);
 
   position:absolute;
   top:0;
@@ -51,8 +67,8 @@ body {
   }
 
   svg {
-    fill:red;
-    outline:green;
+    fill:$green;
+    outline:$green;
     transform:scale(1.4);
     width:100%;
   }

@@ -124,6 +124,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-babel');
 
   grunt.registerTask('default', ['growl:watch', 'watch']);
-  grunt.registerTask('build',['svgstore','sass','autoprefixer','growl:build']);
+  grunt.registerTask('build',['svgstore','sass','autoprefixer','babel','growl:build']);
 
 };
