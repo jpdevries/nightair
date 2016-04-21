@@ -71,7 +71,7 @@ var Digits = React.createClass({
 
 var Digit = React.createClass({
   getDefaultProps:function(){
-    return {
+    return { // SVG path data for each digit
       zero:"M10,14.9V19l-1.3,1.3l-0.4-0.4v-5.7L10,14.9z M8.3,26.9v-5.7l0.4-0.4l1.3,1.3v4.1L8.3,26.9z M15.9,28.5H9.4c-0.6-0.1-0.9-0.5-1.1-1.1l1.7-0.7h5.2L15.9,28.5z M15.3,14.5H10l-1.7-0.7c0.1-0.6,0.5-0.9,1.1-1.1h6.5L15.3,14.5z M15.7,19.1v-4.6l0.7-1.7c0.6,0.1,0.9,0.5,1.1,1.1V20L17,20.4L15.7,19.1z M17,20.8l0.4,0.4v6.1c-0.1,0.6-0.5,0.9-1.1,1.1l-0.7-1.7v-4.6L17,20.8z",
       one:"M15,19.4v-4.6l0.7-1.7c0.6,0.1,0.9,0.5,1.1,1.1v6.1l-0.4,0.4L15,19.4z M16.3,21.1l0.4,0.4v6.1c-0.1,0.6-0.5,0.9-1.1,1.1L14.9,27v-4.5L16.3,21.1z",
       two:"M7.9,26.8v-5.7l0.4-0.4L9.6,22v4.1L7.9,26.8z M16.1,28.3H8.9c-0.6-0.1-0.9-0.5-1.1-1.1l1.7-0.7h5.9L16.1,28.3z M14.8,14.3H9.6l-1.7-0.7C8,13,8.4,12.7,9,12.5h6.5L14.8,14.3z M15.3,19.6l0.9,0.9l-0.9,0.9H9.6l-0.9-0.9l0.9-0.9H15.3z M15.3,18.9v-4.6l0.7-1.7c0.6,0.1,0.9,0.5,1.1,1.1v6.1l-0.4,0.4L15.3,18.9z",
@@ -138,7 +138,7 @@ var Separator = React.createClass({
 });
 
 var digitsDOM = document.getElementById('digits');
-function step(timestamp) {
+function step(timestamp) { // tick tock
   ReactDOM.render(<Digits />, digitsDOM);
 
   window.requestAnimationFrame(step);
