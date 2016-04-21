@@ -1,0 +1,42 @@
+.digit.separator {
+  animation: blink 2s step-start 0s infinite; }
+
+@keyframes blink {
+  50% {
+    visibility: hidden; } }
+
+.digits {
+  display: flex;
+  justify-content: center;
+  font-size: 8vw;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0; }
+  .digits > div:not(.digit) {
+    display: flex;
+    justify-content: center; }
+
+.digit {
+  display: flex;
+  justify-content: center;
+  flex-grow: 0;
+  flex-basis: 14vw;
+  position: relative;
+  margin-right: -0.25em; }
+  .digit.separator {
+    flex-basis: 0.42em;
+    transform: scale(2); }
+  .digit .blur {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%; }
+  .digit svg {
+    fill: red;
+    outline: green;
+    transform: scale(1.4);
+    width: 100%; }
