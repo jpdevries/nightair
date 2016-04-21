@@ -20,7 +20,9 @@ var Digits = React.createClass({
     var minutes = now.getMinutes().toString().split('');
     var seconds = now.getSeconds().toString().split('');
 
+    if(hours.length < 2) hours.unshift('0');
     if(minutes.length < 2) minutes.unshift('0');
+    if(seconds.length < 2) seconds.unshift('0');
 
     return {
       h1:digitToWord(hours[0]),
