@@ -1,65 +1,100 @@
-body {
-  background: #080808;
-  overflow: hidden;
-  background: linear-gradient(to bottom, #080808, #080808 50%, #162c07 50%, #162c07);
-  background-size: 100% 4px; }
-
 .digit.separator {
-  -webkit-animation: blink 2s step-start 0s infinite;
-          animation: blink 2s step-start 0s infinite; }
-
-@-webkit-keyframes blink {
-  50% {
-    visibility: hidden; } }
+  animation: blink 2s step-start 0s infinite; }
 
 @keyframes blink {
   50% {
     visibility: hidden; } }
 
+@keyframes MODX-CYCLE-FILL {
+  0% {
+    fill: #5ba1d4;
+    outline: #5ba1d4; }
+  25% {
+    fill: #88c141;
+    outline: #88c141; }
+  50% {
+    fill: #de3629;
+    outline: #de3629; }
+  75% {
+    fill: #d81c26;
+    outline: #d81c26; } }
+
+@keyframes MODX-CYCLE-BG {
+  0% {
+    opacity: 1; }
+  100% {
+    opacity: 0; } }
+
+body {
+  background: #080808;
+  overflow: hidden;
+  min-height: 100vh;
+  margin: 0;
+  background: linear-gradient(to bottom, #080808, #080808 50%, #162c07 50%, #162c07);
+  background-size: 100% 4px; }
+  body[data-theme="invert"] {
+    background: linear-gradient(to bottom, #f7f7f7, #f7f7f7 50%, #e9d3f8 50%, #e9d3f8); }
+  body[data-theme="calm"] {
+    background: linear-gradient(to bottom, #080808, #080808 50%, #0e546e 50%, #0e546e); }
+  body[data-theme="dangerous"] {
+    background: linear-gradient(to bottom, #080808, #080808 50%, #430002 50%, #430002); }
+  body[data-theme="bright"] {
+    background: linear-gradient(to bottom, #080808, #080808 50%, #686800 50%, #686800); }
+  body[data-theme="royal"] {
+    background: linear-gradient(to bottom, #080808, #080808 50%, #300070 50%, #300070); }
+  body[data-theme="neon"] {
+    background: linear-gradient(to bottom, #080808, #080808 50%, #38003f 50%, #38003f); }
+  body[data-theme="modx"]:after {
+    display: block;
+    content: " ";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: red;
+    z-index: 0;
+    animation: MODX-CYCLE-BG 12s infinite alternate;
+    background: linear-gradient(to bottom, #080808, #080808 50%, #307eb7 50%, #307eb7);
+    background-size: 100% 4px; }
+
 #digits {
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-justify-content: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  justify-content: center;
   font-size: 8vw;
+  z-index: 99999;
   background: linear-gradient(to bottom, black 0%, transparent 50%, black 100%);
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0; }
+  body[data-theme="invert"] #digits {
+    background: linear-gradient(to bottom, #f7f7f7 0%, rgba(247, 247, 247, 0) 50%, #f7f7f7 100%); }
+  body[data-theme="calm"] #digits {
+    background: linear-gradient(to bottom, #080808 0%, rgba(8, 8, 8, 0) 50%, #080808 100%); }
+  body[data-theme="dangerous"] #digits {
+    background: linear-gradient(to bottom, #080808 0%, rgba(8, 8, 8, 0) 50%, #080808 100%); }
+  body[data-theme="bright"] #digits {
+    background: linear-gradient(to bottom, #080808 0%, rgba(8, 8, 8, 0) 50%, #080808 100%); }
+  body[data-theme="royal"] #digits {
+    background: linear-gradient(to bottom, #080808 0%, rgba(8, 8, 8, 0) 50%, #080808 100%); }
+  body[data-theme="neon"] #digits {
+    background: linear-gradient(to bottom, #080808 0%, rgba(8, 8, 8, 0) 50%, #080808 100%); }
   #digits > div:not(.digit) {
-    display: -webkit-flex;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-justify-content: center;
-        -ms-flex-pack: center;
-            justify-content: center; }
+    justify-content: center; }
 
 .digit {
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-justify-content: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-flex-grow: 0;
-      -ms-flex-positive: 0;
-          flex-grow: 0;
-  -webkit-flex-basis: 14vw;
-      -ms-flex-preferred-size: 14vw;
-          flex-basis: 14vw;
+  justify-content: center;
+  flex-grow: 0;
+  flex-basis: 14vw;
   position: relative;
   margin-right: -0.25em; }
   .digit.separator {
-    -webkit-flex-basis: 0.42em;
-        -ms-flex-preferred-size: 0.42em;
-            flex-basis: 0.42em;
-    -webkit-transform: scale(2);
-        -ms-transform: scale(2);
-            transform: scale(2); }
+    flex-basis: 0.42em;
+    transform: scale(2); }
   .digit .blur {
     position: absolute;
     top: 0;
@@ -70,7 +105,25 @@ body {
   .digit svg {
     fill: #86f23b;
     outline: #86f23b;
-    -webkit-transform: scale(1.4);
-        -ms-transform: scale(1.4);
-            transform: scale(1.4);
+    transform: scale(1.4);
     width: 100%; }
+    body[data-theme="invert"] .digit svg {
+      fill: #790dc4;
+      outline: #790dc4; }
+    body[data-theme="calm"] .digit svg {
+      fill: #28b1e3;
+      outline: #28b1e3; }
+    body[data-theme="dangerous"] .digit svg {
+      fill: #fb0007;
+      outline: #fb0007; }
+    body[data-theme="bright"] .digit svg {
+      fill: #ffff0c;
+      outline: #ffff0c; }
+    body[data-theme="royal"] .digit svg {
+      fill: #6e00ff;
+      outline: #6e00ff; }
+    body[data-theme="neon"] .digit svg {
+      fill: #c800e2;
+      outline: #c800e2; }
+    body[data-theme="modx"] .digit svg {
+      animation: MODX-CYCLE-FILL 24s infinite alternate; }

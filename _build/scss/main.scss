@@ -1,19 +1,40 @@
+$topMost:99999;
+
 $black:rgb(8,8,8);
 $green:#86f23b;
 
-body {
-  background:$black;
-  overflow:hidden;
-
-  background: linear-gradient(
-    to bottom,
-    $black,
-    $black 50%,
-    #162c07 50%,
-    #162c07
-  );
-  background-size: 100% 4px; // The rectangle in which to repeat. It can be fully wide in this case
-}
+$themes:(
+  invert:(
+    bg:invert($black),
+    stripe:invert(#162c07),
+    fill:invert($green)
+  ),
+  calm:(
+    bg:$black,
+    stripe:darken(rgb(40,177,227),28%),
+    fill:rgb(40,177,227)
+  ),
+  dangerous:(
+    bg:$black,
+    stripe:darken(rgb(251,0,7),36%),
+    fill:rgb(251,0,7)
+  ),
+  bright:(
+    bg:$black,
+    stripe:darken(rgb(255,255,12),32%),
+    fill:rgb(255,255,12)
+  ),
+  royal:(
+    bg:$black,
+    stripe:darken(rgb(110,0,255),28%),
+    fill:saturate(rgb(110,0,255),24%)
+  ),
+  neon:(
+    bg:$black,
+    stripe:darken(rgb(200,0,226),32%),
+    fill:rgb(200,0,226)
+  )
+);
 
 %blink {
   animation: blink 2s step-start 0s infinite;
@@ -24,12 +45,99 @@ body {
   }
 }
 
+@keyframes MODX-CYCLE-FILL {
+  0% {
+    fill:rgb(91,161,212);
+    outline:rgb(91,161,212);
+  }
+  25% {
+    fill:rgb(136,193,65);
+    outline:rgb(136,193,65);
+  }
+  50% {
+    fill:rgb(222,54,41);
+    outline:rgb(222,54,41);
+  }
+  75% {
+    fill:rgb(216,28,38);
+    outline:rgb(216,28,38);
+  }
+}
+
+@keyframes MODX-CYCLE-BG {
+  0%   {
+    opacity:1;
+  }
+  100% {
+    opacity:0;
+  }
+}
+
+body {
+  background:$black;
+  overflow:hidden;
+  min-height:100vh;
+  margin:0;
+
+  background: linear-gradient(
+    to bottom,
+    $black,
+    $black 50%,
+    #162c07 50%,
+    #162c07
+  );
+  background-size: 100% 4px; // The rectangle in which to repeat. It can be fully wide in this case
+
+  @each $name, $theme in $themes {
+    &[data-theme="#{$name}"] {
+      background: linear-gradient(
+        to bottom,
+        map-get($theme,bg),
+        map-get($theme,bg) 50%,
+        map-get($theme,stripe) 50%,
+        map-get($theme,stripe)
+      );
+    }
+  }
+
+  &[data-theme="modx"] {
+    &:after {
+      display:block;
+      content:" ";
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      bottom:0;
+      background:red;
+      z-index:0;
+      animation: MODX-CYCLE-BG 12s infinite alternate;
+      //display:none;
+      background: linear-gradient(
+        to bottom,
+        $black,
+        $black 50%,
+        darken(rgb(91,161,212),14%) 50%,
+        darken(rgb(91,161,212),14%)
+      );
+      background-size: 100% 4px;
+    }
+  }
+}
+
 #digits {
   display:flex;
   justify-content:center;
   font-size:8vw;
+  z-index:$topMost;
 
   background:linear-gradient(to bottom, rgba(0,0,0,1) 0%,rgba(0,0,0,0) 50%,rgba(0,0,0,1) 100%);
+
+  @each $name, $theme in $themes {
+    body[data-theme="#{$name}"] & {
+      background:linear-gradient(to bottom, rgba(map-get($theme,bg),1) 0%,rgba(map-get($theme,bg),0) 50%,rgba(map-get($theme,bg),1) 100%);
+    }
+  }
 
   position:absolute;
   top:0;
@@ -71,5 +179,17 @@ body {
     outline:$green;
     transform:scale(1.4);
     width:100%;
+
+    @each $name, $theme in $themes {
+      body[data-theme="#{$name}"] & {
+        fill:map-get($theme,fill);
+        outline:map-get($theme,fill);
+      }
+    }
+
+    body[data-theme="modx"] & {
+      animation:MODX-CYCLE-FILL 24s infinite alternate;
+    }
+
   }
 }
