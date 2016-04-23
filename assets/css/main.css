@@ -1,12 +1,31 @@
 html.no-js .digit.separator, body.ticking .digit.separator {
-  animation: blink 2s step-start 0s infinite; }
+  -webkit-animation: blink 2s step-start 0s infinite;
+          animation: blink 2s step-start 0s infinite; }
 
 #digits, .settings {
   background: linear-gradient(to bottom, black 0%, transparent 50%, black 100%); }
 
+@-webkit-keyframes blink {
+  50% {
+    visibility: hidden; } }
+
 @keyframes blink {
   50% {
     visibility: hidden; } }
+
+@-webkit-keyframes MODX-CYCLE-FILL {
+  0% {
+    fill: #5ba1d4;
+    outline: #5ba1d4; }
+  25% {
+    fill: #88c141;
+    outline: #88c141; }
+  50% {
+    fill: #de3629;
+    outline: #de3629; }
+  75% {
+    fill: #d81c26;
+    outline: #d81c26; } }
 
 @keyframes MODX-CYCLE-FILL {
   0% {
@@ -22,6 +41,12 @@ html.no-js .digit.separator, body.ticking .digit.separator {
     fill: #d81c26;
     outline: #d81c26; } }
 
+@-webkit-keyframes MODX-CYCLE-BG {
+  0% {
+    opacity: 1; }
+  100% {
+    opacity: 0; } }
+
 @keyframes MODX-CYCLE-BG {
   0% {
     opacity: 1; }
@@ -31,29 +56,38 @@ html.no-js .digit.separator, body.ticking .digit.separator {
 h1, h2, h3, h4, h5, h6 {
   margin: 0; }
 
-#clock:-webkit-full-screen {
+#clock {
   width: 100vw;
   background: linear-gradient(to bottom, #080808, #080808 50%, #162c07 50%, #162c07);
+  background-size: 100% 4px;
   background-size: 100% 4px; }
+  body[data-theme="invert"] #clock {
+    background: linear-gradient(to bottom, #f7f7f7, #f7f7f7 50%, #e9d3f8 50%, #e9d3f8);
+    background-size: 100% 4px; }
+  body[data-theme="calm"] #clock {
+    background: linear-gradient(to bottom, #080808, #080808 50%, #0e546e 50%, #0e546e);
+    background-size: 100% 4px; }
+  body[data-theme="dangerous"] #clock {
+    background: linear-gradient(to bottom, #080808, #080808 50%, #430002 50%, #430002);
+    background-size: 100% 4px; }
+  body[data-theme="bright"] #clock {
+    background: linear-gradient(to bottom, #080808, #080808 50%, #686800 50%, #686800);
+    background-size: 100% 4px; }
+  body[data-theme="royal"] #clock {
+    background: linear-gradient(to bottom, #080808, #080808 50%, #300070 50%, #300070);
+    background-size: 100% 4px; }
+  body[data-theme="neon"] #clock {
+    background: linear-gradient(to bottom, #080808, #080808 50%, #38003f 50%, #38003f);
+    background-size: 100% 4px; }
+  body[data-theme="sterc"] #clock {
+    background: linear-gradient(to bottom, #080808, #080808 50%, #340a19 50%, #340a19);
+    background-size: 100% 4px; }
 
 body {
   background: #080808;
   min-height: 100vh;
   margin: 0;
-  background: linear-gradient(to bottom, #080808, #080808 50%, #162c07 50%, #162c07);
-  background-size: 100% 4px; }
-  body[data-theme="invert"] {
-    background: linear-gradient(to bottom, #f7f7f7, #f7f7f7 50%, #e9d3f8 50%, #e9d3f8); }
-  body[data-theme="calm"] {
-    background: linear-gradient(to bottom, #080808, #080808 50%, #0e546e 50%, #0e546e); }
-  body[data-theme="dangerous"] {
-    background: linear-gradient(to bottom, #080808, #080808 50%, #430002 50%, #430002); }
-  body[data-theme="bright"] {
-    background: linear-gradient(to bottom, #080808, #080808 50%, #686800 50%, #686800); }
-  body[data-theme="royal"] {
-    background: linear-gradient(to bottom, #080808, #080808 50%, #300070 50%, #300070); }
-  body[data-theme="neon"] {
-    background: linear-gradient(to bottom, #080808, #080808 50%, #38003f 50%, #38003f); }
+  background: linear-gradient(to bottom, #080808, #080808 50%, #162c07 50%, #162c07); }
   body[data-theme="modx"]:after {
     display: block;
     content: " ";
@@ -64,16 +98,38 @@ body {
     bottom: 0;
     background: red;
     z-index: 0;
-    animation: MODX-CYCLE-BG 12s infinite alternate;
+    -webkit-animation: MODX-CYCLE-BG 12s infinite alternate;
+            animation: MODX-CYCLE-BG 12s infinite alternate;
     background: linear-gradient(to bottom, #080808, #080808 50%, #307eb7 50%, #307eb7);
     background-size: 100% 4px; }
 
 svg {
   fill: #86f23b;
   outline: #86f23b; }
+  body[data-theme="invert"] svg {
+    fill: #790dc4;
+    outline: #790dc4; }
+  body[data-theme="calm"] svg {
+    fill: #28b1e3;
+    outline: #28b1e3; }
+  body[data-theme="dangerous"] svg {
+    fill: #fb0007;
+    outline: #fb0007; }
+  body[data-theme="bright"] svg {
+    fill: #ffff0c;
+    outline: #ffff0c; }
+  body[data-theme="royal"] svg {
+    fill: #6e00ff;
+    outline: #6e00ff; }
+  body[data-theme="neon"] svg {
+    fill: #c800e2;
+    outline: #c800e2; }
+  body[data-theme="sterc"] svg {
+    fill: #d62a68;
+    outline: #d62a68; }
 
 #meridian {
-  z-index: 99999;
+  z-index: 0;
   position: absolute;
   top: 6vh;
   right: 6vw;
@@ -82,8 +138,12 @@ svg {
   height: 1em; }
 
 #digits {
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   font-size: 8vw;
   z-index: 99999;
   overflow: hidden;
@@ -92,33 +152,37 @@ svg {
   left: 0;
   right: 0;
   bottom: 0; }
-  body[data-theme="invert"] #digits {
-    background: linear-gradient(to bottom, #f7f7f7 0%, rgba(247, 247, 247, 0) 50%, #f7f7f7 100%); }
-  body[data-theme="calm"] #digits {
-    background: linear-gradient(to bottom, #080808 0%, rgba(8, 8, 8, 0) 50%, #080808 100%); }
-  body[data-theme="dangerous"] #digits {
-    background: linear-gradient(to bottom, #080808 0%, rgba(8, 8, 8, 0) 50%, #080808 100%); }
-  body[data-theme="bright"] #digits {
-    background: linear-gradient(to bottom, #080808 0%, rgba(8, 8, 8, 0) 50%, #080808 100%); }
-  body[data-theme="royal"] #digits {
-    background: linear-gradient(to bottom, #080808 0%, rgba(8, 8, 8, 0) 50%, #080808 100%); }
-  body[data-theme="neon"] #digits {
-    background: linear-gradient(to bottom, #080808 0%, rgba(8, 8, 8, 0) 50%, #080808 100%); }
   #digits > div:not(.digit) {
+    display: -webkit-flex;
+    display: -ms-flexbox;
     display: flex;
-    justify-content: center; }
+    -webkit-justify-content: center;
+        -ms-flex-pack: center;
+            justify-content: center; }
 
 .digit {
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center;
-  flex-grow: 0;
-  flex-basis: 14vw;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+          flex-grow: 0;
+  -webkit-flex-basis: 14vw;
+      -ms-flex-preferred-size: 14vw;
+          flex-basis: 14vw;
   position: relative;
   margin-right: -0.25em; }
   .digit.separator {
-    flex-basis: 0.42em; }
+    -webkit-flex-basis: 0.42em;
+        -ms-flex-preferred-size: 0.42em;
+            flex-basis: 0.42em; }
     .digit.separator svg {
-      transform: scale(2); }
+      -webkit-transform: scale(2);
+          -ms-transform: scale(2);
+              transform: scale(2); }
   .digit .blur {
     position: absolute;
     top: 0;
@@ -127,30 +191,13 @@ svg {
     right: 0;
     height: 100vh; }
   .digit svg {
-    fill: #86f23b;
-    outline: #86f23b;
-    transform: scale(1.4);
+    -webkit-transform: scale(1.4);
+        -ms-transform: scale(1.4);
+            transform: scale(1.4);
     width: 100%; }
-    body[data-theme="invert"] .digit svg {
-      fill: #790dc4;
-      outline: #790dc4; }
-    body[data-theme="calm"] .digit svg {
-      fill: #28b1e3;
-      outline: #28b1e3; }
-    body[data-theme="dangerous"] .digit svg {
-      fill: #fb0007;
-      outline: #fb0007; }
-    body[data-theme="bright"] .digit svg {
-      fill: #ffff0c;
-      outline: #ffff0c; }
-    body[data-theme="royal"] .digit svg {
-      fill: #6e00ff;
-      outline: #6e00ff; }
-    body[data-theme="neon"] .digit svg {
-      fill: #c800e2;
-      outline: #c800e2; }
     body[data-theme="modx"] .digit svg {
-      animation: MODX-CYCLE-FILL 24s infinite alternate; }
+      -webkit-animation: MODX-CYCLE-FILL 24s infinite alternate;
+              animation: MODX-CYCLE-FILL 24s infinite alternate; }
 
 #daysoftheweek {
   position: absolute;
@@ -159,8 +206,12 @@ svg {
   right: 0;
   color: white; }
   #daysoftheweek .week {
+    display: -webkit-flex;
+    display: -ms-flexbox;
     display: flex;
-    justify-content: center; }
+    -webkit-justify-content: center;
+        -ms-flex-pack: center;
+            justify-content: center; }
   #daysoftheweek h3 {
     margin: 0; }
 
@@ -172,12 +223,13 @@ svg {
   .weekday.today {
     opacity: 1; }
   .monfirst .weekday.mon {
-    order: -1; }
+    -webkit-order: -1;
+        -ms-flex-order: -1;
+            order: -1; }
   .monfirst .weekday.sun {
-    order: 1; }
-  .weekday svg {
-    fill: #86f23b;
-    outline: #86f23b; }
+    -webkit-order: 1;
+        -ms-flex-order: 1;
+            order: 1; }
 
 main {
   height: 100vh; }

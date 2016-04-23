@@ -12,3 +12,5 @@ While you wait [try the Adobe AIR App](http://devries.jp/nightair) currently bei
  - Responsive Layout
  - Themes managed by Sass maps
  - Configurable settings
+ - HTML5 Fullscreen Support
+ - Keyboard Accessible

@@ -33,6 +33,11 @@ $themes:(
     bg:$black,
     stripe:darken(rgb(200,0,226),32%),
     fill:rgb(200,0,226)
+  ),
+  sterc:(
+    bg:$black,
+    stripe:darken(rgb(214,42,104),38%),
+    fill:rgb(214,42,104)
   )
 );
 
@@ -83,7 +88,6 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 @mixin striped-bg() {
-  width:100vw;
   background: linear-gradient(
     to bottom,
     $black,
@@ -91,22 +95,25 @@ h1,h2,h3,h4,h5,h6 {
     #162c07 50%,
     #162c07
   );
-  background-size: 100% 4px;
+  background-size: 100% 4px; // The rectangle in which to repeat. It can be fully wide in this case
+  @each $name, $theme in $themes {
+    body[data-theme="#{$name}"] & {
+      background: linear-gradient(
+        to bottom,
+        map-get($theme,bg),
+        map-get($theme,bg) 50%,
+        map-get($theme,stripe) 50%,
+        map-get($theme,stripe)
+      );
+      background-size: 100% 4px; // The rectangle in which to repeat. It can be fully wide in this case
+    }
+  }
 }
 
 #clock {
-  &:-webkit-full-screen {
-    @import striped-bg();
-  }
-  &:-moz-full-screen {
-    @import striped-bg();
-  }
-  &:-ms-fullscreen {
-    @import striped-bg();
-  }
-  &:-webkit-full-screen {
-    @import striped-bg();
-  }
+  width:100vw;
+  @include striped-bg();
+  background-size: 100% 4px;
 }
 
 body {
@@ -122,19 +129,6 @@ body {
     #162c07 50%,
     #162c07
   );
-  background-size: 100% 4px; // The rectangle in which to repeat. It can be fully wide in this case
-
-  @each $name, $theme in $themes {
-    &[data-theme="#{$name}"] {
-      background: linear-gradient(
-        to bottom,
-        map-get($theme,bg),
-        map-get($theme,bg) 50%,
-        map-get($theme,stripe) 50%,
-        map-get($theme,stripe)
-      );
-    }
-  }
 
   &[data-theme="modx"] {
     &:after {
@@ -164,10 +158,16 @@ body {
 svg {
   fill:$green;
   outline:$green;
+  @each $name, $theme in $themes {
+    body[data-theme="#{$name}"] & {
+      fill:map-get($theme,fill);
+      outline:map-get($theme,fill);
+    }
+  }
 }
 
 #meridian {
-  z-index:$topMost;
+  z-index:0;
   position:absolute;
   top:6vh;
   right:6vw;
@@ -184,11 +184,9 @@ svg {
   z-index:$topMost;
   overflow:hidden;
 
-  @each $name, $theme in $themes {
-    body[data-theme="#{$name}"] & {
-      background:linear-gradient(to bottom, rgba(map-get($theme,bg),1) 0%,rgba(map-get($theme,bg),0) 50%,rgba(map-get($theme,bg),1) 100%);
-    }
-  }
+
+
+
 
   position:absolute;
   top:0;
@@ -231,17 +229,10 @@ svg {
   }
 
   svg {
-    fill:$green;
-    outline:$green;
+    //fill:$green;
+    //outline:$green;
     transform:scale(1.4);
     width:100%;
-
-    @each $name, $theme in $themes {
-      body[data-theme="#{$name}"] & {
-        fill:map-get($theme,fill);
-        outline:map-get($theme,fill);
-      }
-    }
 
     body[data-theme="modx"] & {
       animation:MODX-CYCLE-FILL 24s infinite alternate;
@@ -276,10 +267,6 @@ svg {
   .monfirst & {
     &.mon { order:-1 }
     &.sun { order:1 }
-  }
-  svg {
-    fill:$green;
-    outline:$green;
   }
 }
 
