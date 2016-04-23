@@ -1,28 +1,9 @@
-.digit.separator {
-  -webkit-animation: blink 2s step-start 0s infinite;
-          animation: blink 2s step-start 0s infinite; }
-
-@-webkit-keyframes blink {
-  50% {
-    visibility: hidden; } }
+html.no-js .digit.separator, body.ticking .digit.separator {
+  animation: blink 2s step-start 0s infinite; }
 
 @keyframes blink {
   50% {
     visibility: hidden; } }
-
-@-webkit-keyframes MODX-CYCLE-FILL {
-  0% {
-    fill: #5ba1d4;
-    outline: #5ba1d4; }
-  25% {
-    fill: #88c141;
-    outline: #88c141; }
-  50% {
-    fill: #de3629;
-    outline: #de3629; }
-  75% {
-    fill: #d81c26;
-    outline: #d81c26; } }
 
 @keyframes MODX-CYCLE-FILL {
   0% {
@@ -37,12 +18,6 @@
   75% {
     fill: #d81c26;
     outline: #d81c26; } }
-
-@-webkit-keyframes MODX-CYCLE-BG {
-  0% {
-    opacity: 1; }
-  100% {
-    opacity: 0; } }
 
 @keyframes MODX-CYCLE-BG {
   0% {
@@ -79,18 +54,13 @@ body {
     bottom: 0;
     background: red;
     z-index: 0;
-    -webkit-animation: MODX-CYCLE-BG 12s infinite alternate;
-            animation: MODX-CYCLE-BG 12s infinite alternate;
+    animation: MODX-CYCLE-BG 12s infinite alternate;
     background: linear-gradient(to bottom, #080808, #080808 50%, #307eb7 50%, #307eb7);
     background-size: 100% 4px; }
 
 #digits {
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-justify-content: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  justify-content: center;
   font-size: 8vw;
   z-index: 99999;
   background: linear-gradient(to bottom, black 0%, transparent 50%, black 100%);
@@ -112,35 +82,19 @@ body {
   body[data-theme="neon"] #digits {
     background: linear-gradient(to bottom, #080808 0%, rgba(8, 8, 8, 0) 50%, #080808 100%); }
   #digits > div:not(.digit) {
-    display: -webkit-flex;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-justify-content: center;
-        -ms-flex-pack: center;
-            justify-content: center; }
+    justify-content: center; }
 
 .digit {
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-justify-content: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-flex-grow: 0;
-      -ms-flex-positive: 0;
-          flex-grow: 0;
-  -webkit-flex-basis: 14vw;
-      -ms-flex-preferred-size: 14vw;
-          flex-basis: 14vw;
+  justify-content: center;
+  flex-grow: 0;
+  flex-basis: 14vw;
   position: relative;
   margin-right: -0.25em; }
   .digit.separator {
-    -webkit-flex-basis: 0.42em;
-        -ms-flex-preferred-size: 0.42em;
-            flex-basis: 0.42em;
-    -webkit-transform: scale(2);
-        -ms-transform: scale(2);
-            transform: scale(2); }
+    flex-basis: 0.42em;
+    transform: scale(2); }
   .digit .blur {
     position: absolute;
     top: 0;
@@ -151,9 +105,7 @@ body {
   .digit svg {
     fill: #86f23b;
     outline: #86f23b;
-    -webkit-transform: scale(1.4);
-        -ms-transform: scale(1.4);
-            transform: scale(1.4);
+    transform: scale(1.4);
     width: 100%; }
     body[data-theme="invert"] .digit svg {
       fill: #790dc4;
@@ -174,5 +126,31 @@ body {
       fill: #c800e2;
       outline: #c800e2; }
     body[data-theme="modx"] .digit svg {
-      -webkit-animation: MODX-CYCLE-FILL 24s infinite alternate;
-              animation: MODX-CYCLE-FILL 24s infinite alternate; }
+      animation: MODX-CYCLE-FILL 24s infinite alternate; }
+
+#daysoftheweek {
+  position: absolute;
+  bottom: 4vh;
+  left: 0;
+  right: 0;
+  color: white; }
+  #daysoftheweek .week {
+    display: flex;
+    justify-content: center; }
+  #daysoftheweek h3 {
+    margin: 0; }
+
+.weekday {
+  padding: 0 0.2em;
+  min-width: 3em;
+  opacity: 0.42;
+  transition: opacity 240ms ease; }
+  .weekday.today {
+    opacity: 1; }
+  .monfirst .weekday.mon {
+    order: -1; }
+  .monfirst .weekday.sun {
+    order: 1; }
+  .weekday svg {
+    fill: #86f23b;
+    outline: #86f23b; }

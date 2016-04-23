@@ -160,9 +160,11 @@ body {
   margin-right:-0.25em;
   //transform:scale(2.4);
   &.separator {
-    @extend %blink;
     flex-basis:0.42em;
     transform:scale(2);
+    html.no-js &, body.ticking & {
+      @extend %blink;
+    }
   }
 
   .blur {
@@ -191,5 +193,38 @@ body {
       animation:MODX-CYCLE-FILL 24s infinite alternate;
     }
 
+  }
+}
+
+#daysoftheweek {
+  position:absolute;
+  bottom:4vh;
+  left:0;
+  right:0;
+  .week {
+    display:flex;
+    justify-content:center;
+  }
+  color:white;
+  h3 {
+    margin:0;
+  }
+}
+
+.weekday {
+  padding:0 0.2em;
+  min-width:3em;
+  opacity:0.42;
+  transition:opacity 240ms ease;
+  &.today {
+    opacity:1;
+  }
+  .monfirst & {
+    &.mon { order:-1 }
+    &.sun { order:1 }
+  }
+  svg {
+    fill:$green;
+    outline:$green;
   }
 }
