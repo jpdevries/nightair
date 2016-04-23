@@ -1,6 +1,9 @@
 html.no-js .digit.separator, body.ticking .digit.separator {
   animation: blink 2s step-start 0s infinite; }
 
+#digits, .settings {
+  background: linear-gradient(to bottom, black 0%, transparent 50%, black 100%); }
+
 @keyframes blink {
   50% {
     visibility: hidden; } }
@@ -25,9 +28,16 @@ html.no-js .digit.separator, body.ticking .digit.separator {
   100% {
     opacity: 0; } }
 
+h1, h2, h3, h4, h5, h6 {
+  margin: 0; }
+
+#clock:-webkit-full-screen {
+  width: 100vw;
+  background: linear-gradient(to bottom, #080808, #080808 50%, #162c07 50%, #162c07);
+  background-size: 100% 4px; }
+
 body {
   background: #080808;
-  overflow: hidden;
   min-height: 100vh;
   margin: 0;
   background: linear-gradient(to bottom, #080808, #080808 50%, #162c07 50%, #162c07);
@@ -58,12 +68,25 @@ body {
     background: linear-gradient(to bottom, #080808, #080808 50%, #307eb7 50%, #307eb7);
     background-size: 100% 4px; }
 
+svg {
+  fill: #86f23b;
+  outline: #86f23b; }
+
+#meridian {
+  z-index: 99999;
+  position: absolute;
+  top: 6vh;
+  right: 6vw;
+  font-size: 2em;
+  width: 2em;
+  height: 1em; }
+
 #digits {
   display: flex;
   justify-content: center;
   font-size: 8vw;
   z-index: 99999;
-  background: linear-gradient(to bottom, black 0%, transparent 50%, black 100%);
+  overflow: hidden;
   position: absolute;
   top: 0;
   left: 0;
@@ -93,15 +116,16 @@ body {
   position: relative;
   margin-right: -0.25em; }
   .digit.separator {
-    flex-basis: 0.42em;
-    transform: scale(2); }
+    flex-basis: 0.42em; }
+    .digit.separator svg {
+      transform: scale(2); }
   .digit .blur {
     position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 100%; }
+    height: 100vh; }
   .digit svg {
     fill: #86f23b;
     outline: #86f23b;
@@ -130,7 +154,7 @@ body {
 
 #daysoftheweek {
   position: absolute;
-  bottom: 4vh;
+  bottom: 6vh;
   left: 0;
   right: 0;
   color: white; }
@@ -154,3 +178,21 @@ body {
   .weekday svg {
     fill: #86f23b;
     outline: #86f23b; }
+
+main {
+  height: 100vh; }
+
+body {
+  font-family: sans-serif; }
+
+.settings {
+  display: none;
+  min-height: 100vh;
+  color: #86f23b;
+  z-index: 100009; }
+  .settings .container {
+    max-width: 68vw;
+    margin: 0 auto;
+    z-index: 100009; }
+    .settings .container input {
+      z-index: 100009; }

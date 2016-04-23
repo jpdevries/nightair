@@ -157,10 +157,9 @@ var WeekDays = React.createClass({ // weekdays display ticker made up of <Weekda
       {key:'sat',l:'Saturday'}
     ]
     var weekNodes = [];
-    for(var i = 0; i < weekDays.length; i++) {
-      var isToday = dow == i ? true : false; // current day of the week is highlighted
-      weekNodes.push(<WeekDay key={weekDays[i].key} D={weekDays[i].key} l={weekDays[i].l} isToday={isToday} />);
-    }
+    for(var i = 0; i < weekDays.length; i++) weekNodes.push( // push each day of the weak into an Array
+      <WeekDay key={weekDays[i].key} D={weekDays[i].key} l={weekDays[i].l} isToday={dow == i ? true : false} />
+    );
 
     var cls = 'week ';
     if(mondayFirst) cls += 'monfirst'; // uses flex order to change the visual order
@@ -173,13 +172,68 @@ var WeekDays = React.createClass({ // weekdays display ticker made up of <Weekda
   }
 });
 
+var Meridian = React.createClass({
+  getAnteMeridiem(){
+    return (new Date().getHours() < 12) ? true : false;
+  },
+  getPostMeridiem(){
+    return !this.getAnteMeridiem();
+  },
+  render:function(){
+    var xlink = "assets/img/art.svg#icon-" + (this.getAnteMeridiem() ? 'am' : 'pm'),
+    title = (this.props.anteMeridiem ? 'AM' : 'PM');
+    if(militaryTime) return null;
+    return (
+      <h3>
+        <svg x="0px" y="0px" viewBox="0 0 24 42" enable-background="new 0 0 24 42">
+          <title>{title}</title>
+          <use xlinkHref={xlink} />
+        </svg>
+      </h3>
+    );
+  }
+});
+
 var digitsDOM = document.getElementById('digits'),
-weekdaysDOM = document.getElementById('daysoftheweek');
+weekdaysDOM = document.getElementById('daysoftheweek'),
+meridianDOM = document.getElementById('meridian');
 function step(timestamp) { // tick tock
   ReactDOM.render(<Digits />, digitsDOM);
   ReactDOM.render(<WeekDays />, weekdaysDOM);
+  ReactDOM.render(<Meridian />, meridianDOM);
 
   window.requestAnimationFrame(step);
 }
 
 window.requestAnimationFrame(step);
+
+(function(){
+  var pfx = ["webkit", "moz", "ms", "o", ""];
+  function RunPrefixMethod(obj, method) {
+      var p = 0, m, t;
+      while (p < pfx.length && !obj[m]) {
+          m = method;
+          if (pfx[p] == "") {
+              m = m.substr(0,1).toLowerCase() + m.substr(1);
+          }
+          m = pfx[p] + m;
+          t = typeof obj[m];
+          if (t != "undefined") {
+              pfx = [pfx[p]];
+              return (t == "function" ? obj[m]() : obj[m]);
+          }
+          p++;
+      }
+  }
+
+  var e = document.querySelector('#clock'); // this is the current displaying video
+  e.onclick = function() {
+
+    if (RunPrefixMethod(document, "FullScreen") || RunPrefixMethod(document, "IsFullScreen")) {
+        RunPrefixMethod(document, "CancelFullScreen");
+    }
+    else {
+        RunPrefixMethod(e, "RequestFullScreen");
+    }
+}
+})();

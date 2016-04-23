@@ -14,9 +14,14 @@
     "babel-preset-react": "^6.5.0",
     "grunt-autoprefixer": "^3.0.4",
     "grunt-babel": "^6.0.0",
+    "grunt-contrib-uglify": "^1.0.1",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-growl": "^0.1.5",
     "grunt-sass": "^1.1.0",
     "grunt-svgstore": "^1.0.0"
+  },
+  "dependencies": {
+    "react": "^15.0.1",
+    "react-dom": "^15.0.1"
   }
 }

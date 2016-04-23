@@ -109,6 +109,16 @@ module.exports = function(grunt) {
           ext: '.js'
         }]
       }
+    },
+    uglify: {
+      main: {
+        options:{
+          report:grunt.option('report') || 'min'
+        },
+        files: {
+          '<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>main.min.js': ['<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>main.js']
+        }
+      }
     }
   };
 
@@ -122,6 +132,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-growl');
   grunt.loadNpmTasks('grunt-babel');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
 
   grunt.registerTask('default', ['growl:watch', 'watch']);
   grunt.registerTask('build',['svgstore','sass','autoprefixer','babel','growl:build']);

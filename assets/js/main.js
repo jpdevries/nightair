@@ -1,5 +1,7 @@
 'use strict';
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 document.querySelector('html').classList.remove('no-js');
 
 setTimeout(function () {
@@ -196,11 +198,9 @@ var WeekDays = React.createClass({
     var weekDays = [{ key: 'sun', l: 'Sunday' }, { key: 'mon', l: 'Monday' }, { key: 'tue', l: 'Tuesday' }, { key: 'wed', l: 'Wednesday' }, { key: 'thu', l: 'Thursday' }, { key: 'fri', l: 'Friday' }, { key: 'sat', l: 'Saturday' }];
     var weekNodes = [];
     for (var i = 0; i < weekDays.length; i++) {
-      var isToday = dow == i ? true : false; // current day of the week is highlighted
-      weekNodes.push(React.createElement(WeekDay, { key: weekDays[i].key, D: weekDays[i].key, l: weekDays[i].l, isToday: isToday }));
-    }
-
-    var cls = 'week ';
+      weekNodes.push( // push each day of the weak into an Array
+      React.createElement(WeekDay, { key: weekDays[i].key, D: weekDays[i].key, l: weekDays[i].l, isToday: dow == i ? true : false }));
+    }var cls = 'week ';
     if (mondayFirst) cls += 'monfirst'; // uses flex order to change the visual order
 
     return React.createElement(
@@ -211,14 +211,78 @@ var WeekDays = React.createClass({
   }
 });
 
+var Meridian = React.createClass({
+  displayName: 'Meridian',
+  getAnteMeridiem: function getAnteMeridiem() {
+    return new Date().getHours() < 12 ? true : false;
+  },
+  getPostMeridiem: function getPostMeridiem() {
+    return !this.getAnteMeridiem();
+  },
+
+  render: function render() {
+    var xlink = "assets/img/art.svg#icon-" + (this.getAnteMeridiem() ? 'am' : 'pm'),
+        title = this.props.anteMeridiem ? 'AM' : 'PM';
+    if (militaryTime) return null;
+    return React.createElement(
+      'h3',
+      null,
+      React.createElement(
+        'svg',
+        { x: '0px', y: '0px', viewBox: '0 0 24 42', 'enable-background': 'new 0 0 24 42' },
+        React.createElement(
+          'title',
+          null,
+          title
+        ),
+        React.createElement('use', { xlinkHref: xlink })
+      )
+    );
+  }
+});
+
 var digitsDOM = document.getElementById('digits'),
-    weekdaysDOM = document.getElementById('daysoftheweek');
+    weekdaysDOM = document.getElementById('daysoftheweek'),
+    meridianDOM = document.getElementById('meridian');
 function step(timestamp) {
   // tick tock
   ReactDOM.render(React.createElement(Digits, null), digitsDOM);
   ReactDOM.render(React.createElement(WeekDays, null), weekdaysDOM);
+  ReactDOM.render(React.createElement(Meridian, null), meridianDOM);
 
   window.requestAnimationFrame(step);
 }
 
 window.requestAnimationFrame(step);
+
+(function () {
+  var pfx = ["webkit", "moz", "ms", "o", ""];
+  function RunPrefixMethod(obj, method) {
+    var p = 0,
+        m,
+        t;
+    while (p < pfx.length && !obj[m]) {
+      m = method;
+      if (pfx[p] == "") {
+        m = m.substr(0, 1).toLowerCase() + m.substr(1);
+      }
+      m = pfx[p] + m;
+      t = _typeof(obj[m]);
+      if (t != "undefined") {
+        pfx = [pfx[p]];
+        return t == "function" ? obj[m]() : obj[m];
+      }
+      p++;
+    }
+  }
+
+  var e = document.querySelector('#clock'); // this is the current displaying video
+  e.onclick = function () {
+
+    if (RunPrefixMethod(document, "FullScreen") || RunPrefixMethod(document, "IsFullScreen")) {
+      RunPrefixMethod(document, "CancelFullScreen");
+    } else {
+      RunPrefixMethod(e, "RequestFullScreen");
+    }
+  };
+})();
