@@ -1,4 +1,4 @@
-html.no-js .digit.separator, body.ticking .digit.separator {
+#digits .settingAlarm .digit.seconds, html.no-js .digit.separator, body.ticking .digit.separator {
   -webkit-animation: blink 2s step-start 0s infinite;
           animation: blink 2s step-start 0s infinite; }
 

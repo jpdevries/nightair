@@ -93,9 +93,13 @@ module.exports = function(grunt) {
         babel: {
             title: "babel",
             message: "Babel Babel."
+        },
+        browserify: {
+            title: "browserify",
+            message: "Scripts Browserifyed."
         }
     },
-    babel: {
+    babel: { // todo: remove
       options: {
         plugins: ['transform-react-jsx'],
         presets: ['es2015', 'react']
@@ -109,6 +113,21 @@ module.exports = function(grunt) {
           ext: '.js'
         }]
       }
+    },
+    browserify: {
+       dist: {
+          options: {
+            plugins: ['transform-react-jsx'],
+             transform: [
+                ["babelify", {
+
+                }]
+             ]
+          },
+          files: {
+             "<%= dirs.theme %><%= dirs.assets %><%= dirs.js %>main.js": ["./jsx/*.jsx"]
+          }
+       }
     },
     uglify: {
       main: {
@@ -132,6 +151,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-growl');
   grunt.loadNpmTasks('grunt-babel');
+  grunt.loadNpmTasks("grunt-browserify");
   grunt.loadNpmTasks('grunt-contrib-uglify');
 
   grunt.registerTask('default', ['growl:watch', 'watch']);

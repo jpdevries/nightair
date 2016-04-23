@@ -5,7 +5,7 @@ While you wait [try the Adobe AIR App](http://devries.jp/nightair) currently bei
 
 [Check out the example](http://jpdevries.github.io/nightair/) to view progress of the HTML5 port.
 
-## Highlights
+## Highlights (WIP)
  - HD Graphics
  - CSS Keyframe Animation
  - React/JSX powered SVG
@@ -14,3 +14,6 @@ While you wait [try the Adobe AIR App](http://devries.jp/nightair) currently bei
  - Configurable settings
  - HTML5 Fullscreen Support
  - Keyboard Accessible
+ - Web Notifications
+ - Timezone Support
+ - Local Storage

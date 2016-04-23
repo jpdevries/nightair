@@ -1,30 +1,101 @@
 document.querySelector('html').classList.remove('no-js');
 
-setTimeout(function(){ // wait until the next whole second to start the blinking so it syncs with the seconds
-  document.body.classList.add('ticking');
-}, 1000 - new Date().getMilliseconds());
+function tick() {
+  setTimeout(function(){ // wait until the next whole second to start the blinking so it syncs with the seconds
+    document.body.classList.add('ticking');
+  }, 1000 - new Date().getMilliseconds());
+}
+
+tick();
 
 var mondayFirst = false, // will eventually be user facing
-militaryTime = false;
+militaryTime = false,
+settingAlarm = false,
+fullscreenMode = false,
+alarmTime = (function(){
+  var storage = localStorage.getItem('NightAir__alarm') || undefined;
+  var date = new Date();
+  if(storage) {
+    date = new Date(parseInt(storage));
+  } else {
+    date.setHours(0);
+    date.setMinutes(0);
+  }
+  date.setSeconds(0);
+  date.setMilliseconds(0);
+
+  return date;
+})();
+var clockDOM = document.querySelector('#clock'); // this is the current displaying video
+
+function setAlarmTime(date) {
+  alarmTime = date;
+  localStorage.setItem('NightAir__alarm',alarmTime.getTime());
+}
+
+document.addEventListener("keypress", function(e){
+  console.log('keypress',e.keyCode);
+  switch(e.keyCode) {
+    case 32:
+    settingAlarm = true;
+    break;
+
+    case 104:
+    case 38:
+    if(settingAlarm) {
+      console.log('h');
+      setAlarmTime(new Date(alarmTime.getTime() + (1000 * 60 * 60)));
+    }
+
+    break;
+
+    case 109:
+    case 39:
+    if(settingAlarm) {
+      console.log('m');
+      setAlarmTime(new Date(alarmTime.getTime() + (1000 * 60)));
+    }
+    break;
+  }
+});
+
+document.addEventListener("keyup", function(e){
+  console.log('keyup',e.keyCode);
+  switch(e.keyCode) {
+    case 32:
+    settingAlarm = false;
+    break;
+
+    case 38:
+    if(settingAlarm) setAlarmTime(new Date(alarmTime.getTime() + (1000 * 60 * 60)));
+    break;
+
+    case 39:
+    if(settingAlarm) setAlarmTime(new Date(alarmTime.getTime() + (1000 * 60)));
+    break;
+  }
+});
 
 var Digits = React.createClass({ // the clock display, made up if <Digit>s
   render:function(){
     var now = this.getTime();
+    var cls = '';
+    if(settingAlarm) cls = 'settingAlarm';
     return (
-      <div>
+      <div className={cls}>
         <Digit digit={now.h1} />
         <Digit digit={now.h2} />
         <Separator />
         <Digit digit={now.m1} />
         <Digit digit={now.m2} />
         <Separator />
-        <Digit digit={now.s1} />
-        <Digit digit={now.s2} />
+        <Digit className="digit seconds seconds-tenth" digit={now.s1} />
+        <Digit className="digit seconds" digit={now.s2} />
       </div>
     );
   },
   getTime:function(){
-    var now = new Date();
+    var now = (settingAlarm) ? alarmTime : new Date();
     var hours = (function(){
       var h = now.getHours();
       if(!militaryTime && h > 12) h -= 12;
@@ -56,6 +127,7 @@ var Digit = React.createClass({ // an SVG representation of a digit 0-9
   getDefaultProps:function(){
     return {
       digit:"zero",
+      className:'digit ',
       // SVG path data for each digit
       zero:"M8.8,19.7l-1.1,1.1L7,20.2v-6.9L8.8,15V19.7z M8.8,27.3L7,29.1v-6.9l0.7-0.7l1.1,1.1V27.3z M16.6,12.9l-1.7,1.8H9.1l-1.7-1.8H16.6z M16.6,29.4H7.4l1.7-1.8h5.7L16.6,29.4z M17,20.2l-0.6,0.7l-1.1-1.1V15l1.8-1.8L17,20.2L17,20.2z M17,29.1l-1.8-1.8v-4.7l1.1-1.1l0.6,0.7v6.9H17z",
       one:"M15.2,19.7V15l1.8-1.8v7l-0.7,0.7L15.2,19.7z M16.9,22.2v6.9l-1.8-1.8v-4.7l1.1-1.1L16.9,22.2z",
@@ -71,7 +143,7 @@ var Digit = React.createClass({ // an SVG representation of a digit 0-9
   },
   render:function(){
     return (
-      <div className="digit">
+      <div className={this.props.className}>
         <svg className="blur" x="0px" y="0px" viewBox="0 0 24 42" enable-background="new 0 0 24 42">
         <defs>
             <filter id="blur"  x="-50%" y="-50%" width="200%" height="200%">
@@ -146,7 +218,10 @@ var WeekDay = React.createClass({ // SVG representation of a given day
 
 var WeekDays = React.createClass({ // weekdays display ticker made up of <Weekday>s
   render:function() {
-    var dow = new Date().getDay();
+    var dow = (function(){
+      //if(settingAlarm) return alarmTime;
+      return new Date();
+    })().getDay();
     var weekDays = [
       {key:'sun',l:'Sunday'},
       {key:'mon',l:'Monday'},
@@ -174,7 +249,10 @@ var WeekDays = React.createClass({ // weekdays display ticker made up of <Weekda
 
 var Meridian = React.createClass({
   getAnteMeridiem(){
-    return (new Date().getHours() < 12) ? true : false;
+    return ((function(){
+      if(settingAlarm) return alarmTime;
+      return new Date();
+    })().getHours() < 12) ? true : false;
   },
   getPostMeridiem(){
     return !this.getAnteMeridiem();
@@ -226,14 +304,15 @@ window.requestAnimationFrame(step);
       }
   }
 
-  var e = document.querySelector('#clock'); // this is the current displaying video
-  e.onclick = function() {
 
+  clockDOM.onclick = function() {
     if (RunPrefixMethod(document, "FullScreen") || RunPrefixMethod(document, "IsFullScreen")) {
         RunPrefixMethod(document, "CancelFullScreen");
+        fullscreenMode = false;
     }
     else {
-        RunPrefixMethod(e, "RequestFullScreen");
+        RunPrefixMethod(clockDOM, "RequestFullScreen");
+        fullscreenMode = true;
     }
 }
 })();

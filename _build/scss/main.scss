@@ -183,22 +183,33 @@ svg {
   font-size:8vw;
   z-index:$topMost;
   overflow:hidden;
-
-
-
-
-
   position:absolute;
   top:0;
   left:0;
   right:0;
   bottom:0;
+
+  .settingAlarm {
+    .digit {
+      &.seconds {
+        @extend %blink;
+      }
+      &.separator {
+        body.ticking & {
+          //animation:none;
+        }
+      }
+    }
+  }
+
   > div:not(.digit) {
     display:flex;
     justify-content:center;
     //overflow:hidden;
   }
 }
+
+
 
 .digit {
   display:flex;
