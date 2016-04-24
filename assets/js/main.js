@@ -3,6 +3,10 @@
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 document.querySelector('html').classList.remove('no-js');
+if (localStorage.getItem('NightAir__theme')) {
+  //console.log(localStorage.getItem('NightAir__theme'));
+  document.body.setAttribute('data-theme', localStorage.getItem('NightAir__theme'));
+}
 
 function tick() {
   setTimeout(function () {
@@ -18,6 +22,9 @@ var mondayFirst = false,
 militaryTime = false,
     settingAlarm = false,
     fullscreenMode = false,
+    commandKeyDown = false,
+    alarming = false,
+    suppressAlarm = false,
     alarmTime = function () {
   var storage = localStorage.getItem('NightAir__alarm') || undefined;
   var date = new Date();
@@ -39,37 +46,80 @@ function setAlarmTime(date) {
   localStorage.setItem('NightAir__alarm', alarmTime.getTime());
 }
 
+function setTheme(theme) {
+  document.body.setAttribute('data-theme', theme);
+  localStorage.setItem('NightAir__theme', theme);
+}
+
 document.addEventListener("keypress", function (e) {
-  console.log('keypress', e.keyCode);
+  //console.log(e.keyCode);
   switch (e.keyCode) {
     case 32:
       settingAlarm = true;
       break;
 
+    case 91:
+      commandKeyDown = true;
+      break;
+
+    case 161:
+      setTheme('default');
+      break;
+
+    case 8482:
+      setTheme('calm');
+      break;
+
+    case 163:
+      setTheme('dangerous');
+      break;
+
+    case 162:
+      setTheme('bright');
+      break;
+
+    case 8734:
+      setTheme('royal');
+      break;
+
+    case 167:
+      setTheme('neon');
+      break;
+
+    case 182:
+      setTheme('sterc');
+      break;
+
+    case 8226:
+      setTheme('invert');
+      break;
+
+    case 170:
+      setTheme('modx');
+      break;
+
     case 104:
     case 38:
-      if (settingAlarm) {
-        console.log('h');
-        setAlarmTime(new Date(alarmTime.getTime() + 1000 * 60 * 60));
-      }
-
+    case 72:
+      if (settingAlarm) setAlarmTime(new Date(alarmTime.getTime() + 1000 * 60 * 60));
       break;
 
     case 109:
     case 39:
-      if (settingAlarm) {
-        console.log('m');
-        setAlarmTime(new Date(alarmTime.getTime() + 1000 * 60));
-      }
+    case 77:
+      if (settingAlarm) setAlarmTime(new Date(alarmTime.getTime() + 1000 * 60));
       break;
   }
 });
 
 document.addEventListener("keyup", function (e) {
-  console.log('keyup', e.keyCode);
   switch (e.keyCode) {
     case 32:
       settingAlarm = false;
+      break;
+
+    case 91:
+      commandKeyDown = true;
       break;
 
     case 38:
@@ -82,6 +132,13 @@ document.addEventListener("keyup", function (e) {
   }
 });
 
+function doAlarm() {
+  if (settingAlarm || suppressAlarm) return;
+  //console.log('ALARM!');
+  alarming = true;
+  suppressAlarm = true;
+}
+
 var Digits = React.createClass({
   displayName: 'Digits',
   // the clock display, made up if <Digit>s
@@ -89,6 +146,8 @@ var Digits = React.createClass({
     var now = this.getTime();
     var cls = '';
     if (settingAlarm) cls = 'settingAlarm';
+    if (alarming) cls = 'alarming';
+    if (this.shouldAlarm()) doAlarm();
     return React.createElement(
       'div',
       { className: cls },
@@ -102,8 +161,18 @@ var Digits = React.createClass({
       React.createElement(Digit, { className: 'digit seconds', digit: now.s2 })
     );
   },
+  shouldAlarm: function shouldAlarm() {
+    var now = new Date();
+    return alarmTime.getHours() === now.getHours() && alarmTime.getMinutes() === now.getMinutes() ? true : false;
+  },
   getTime: function getTime() {
     var now = settingAlarm ? alarmTime : new Date();
+
+    if (alarming) {
+      now.setSeconds(0);
+      now.setMilliseconds(0);
+    }
+
     var hours = function () {
       var h = now.getHours();
       if (!militaryTime && h > 12) h -= 12;
@@ -319,14 +388,44 @@ var Meridian = React.createClass({
   }
 });
 
+var Player = React.createClass({
+  displayName: 'Player',
+
+  getDefaultProps: function getDefaultProps() {
+    return {
+      srcMp3: 'assets/mp3/digital_beep.mp3',
+      autoplay: true,
+      volume: 1,
+      muted: false,
+      loop: true,
+      controls: false
+    };
+  },
+  render: function render() {
+    if (!alarming) return React.createElement('div', null);
+    return React.createElement(
+      'div',
+      null,
+      React.createElement(
+        'audio',
+        { autoPlay: this.props.autoplay, loop: this.props.loop, muted: this.props.muted, controls: this.props.controls },
+        React.createElement('source', { src: this.props.srcMp3, type: 'audio/mpeg' }),
+        'Your browser does not support the audio element.'
+      )
+    );
+  }
+});
+
 var digitsDOM = document.getElementById('digits'),
     weekdaysDOM = document.getElementById('daysoftheweek'),
-    meridianDOM = document.getElementById('meridian');
+    meridianDOM = document.getElementById('meridian'),
+    playerDOM = document.getElementById('player');
 function step(timestamp) {
   // tick tock
   ReactDOM.render(React.createElement(Digits, null), digitsDOM);
   ReactDOM.render(React.createElement(WeekDays, null), weekdaysDOM);
   ReactDOM.render(React.createElement(Meridian, null), meridianDOM);
+  ReactDOM.render(React.createElement(Player, null), playerDOM);
 
   window.requestAnimationFrame(step);
 }

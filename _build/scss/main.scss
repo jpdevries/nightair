@@ -11,7 +11,7 @@ $themes:(
   ),
   calm:(
     bg:$black,
-    stripe:darken(rgb(40,177,227),28%),
+    stripe:darken(rgb(40,177,227),32%),
     fill:rgb(40,177,227)
   ),
   dangerous:(
@@ -47,6 +47,9 @@ $themes:(
 
 %shaded {
   background:linear-gradient(to bottom, rgba(0,0,0,1) 0%,rgba(0,0,0,0) 50%,rgba(0,0,0,1) 100%);
+  body[data-theme="invert"] & {
+    background:linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 50%,rgba(255,255,255,1) 100%);
+  }
 }
 
 @keyframes blink {
@@ -107,6 +110,16 @@ h1,h2,h3,h4,h5,h6 {
       );
       background-size: 100% 4px; // The rectangle in which to repeat. It can be fully wide in this case
     }
+    body[data-theme="modx"] & {
+      background: linear-gradient(
+        to bottom,
+        $black,
+        $black 50%,
+        darken(rgb(91,161,212),42%) 50%,
+        darken(rgb(91,161,212),42%)
+      );
+      background-size: 100% 4px; // The rectangle in which to repeat. It can be fully wide in this case
+    }
   }
 }
 
@@ -131,7 +144,14 @@ body {
   );
 
   &[data-theme="modx"] {
-    &:after {
+    background: linear-gradient(
+      to bottom,
+      $black,
+      $black 50%,
+      darken(rgb(91,161,212),14%) 50%,
+      darken(rgb(91,161,212),14%)
+    );
+    /*&:after {
       display:block;
       content:" ";
       position:absolute;
@@ -151,7 +171,7 @@ body {
         darken(rgb(91,161,212),14%)
       );
       background-size: 100% 4px;
-    }
+    }*/
   }
 }
 
@@ -163,6 +183,9 @@ svg {
       fill:map-get($theme,fill);
       outline:map-get($theme,fill);
     }
+  }
+  body[data-theme="modx"] & {
+    animation:MODX-CYCLE-FILL 24s infinite alternate;
   }
 }
 
@@ -189,12 +212,20 @@ svg {
   right:0;
   bottom:0;
 
-  .settingAlarm {
+  .settingAlarm, .alarming {
     .digit {
       &.seconds {
         @extend %blink;
       }
+    }
+  }
+
+  .alarming {
+    @extend %blink;
+    .digit {
+
       &.separator {
+        animation:none;
         body.ticking & {
           //animation:none;
         }
@@ -244,11 +275,6 @@ svg {
     //outline:$green;
     transform:scale(1.4);
     width:100%;
-
-    body[data-theme="modx"] & {
-      animation:MODX-CYCLE-FILL 24s infinite alternate;
-    }
-
   }
 }
 

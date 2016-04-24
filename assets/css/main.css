@@ -1,9 +1,11 @@
-#digits .settingAlarm .digit.seconds, html.no-js .digit.separator, body.ticking .digit.separator {
+#digits .settingAlarm .digit.seconds, #digits .alarming .digit.seconds, #digits .alarming, html.no-js .digit.separator, body.ticking .digit.separator {
   -webkit-animation: blink 2s step-start 0s infinite;
           animation: blink 2s step-start 0s infinite; }
 
 #digits, .settings {
   background: linear-gradient(to bottom, black 0%, transparent 50%, black 100%); }
+  body[data-theme="invert"] #digits, body[data-theme="invert"] .settings {
+    background: linear-gradient(to bottom, white 0%, rgba(255, 255, 255, 0) 50%, white 100%); }
 
 @-webkit-keyframes blink {
   50% {
@@ -64,23 +66,44 @@ h1, h2, h3, h4, h5, h6 {
   body[data-theme="invert"] #clock {
     background: linear-gradient(to bottom, #f7f7f7, #f7f7f7 50%, #e9d3f8 50%, #e9d3f8);
     background-size: 100% 4px; }
+  body[data-theme="modx"] #clock {
+    background: linear-gradient(to bottom, #080808, #080808 50%, #123046 50%, #123046);
+    background-size: 100% 4px; }
   body[data-theme="calm"] #clock {
-    background: linear-gradient(to bottom, #080808, #080808 50%, #0e546e 50%, #0e546e);
+    background: linear-gradient(to bottom, #080808, #080808 50%, #0c465c 50%, #0c465c);
+    background-size: 100% 4px; }
+  body[data-theme="modx"] #clock {
+    background: linear-gradient(to bottom, #080808, #080808 50%, #123046 50%, #123046);
     background-size: 100% 4px; }
   body[data-theme="dangerous"] #clock {
     background: linear-gradient(to bottom, #080808, #080808 50%, #430002 50%, #430002);
     background-size: 100% 4px; }
+  body[data-theme="modx"] #clock {
+    background: linear-gradient(to bottom, #080808, #080808 50%, #123046 50%, #123046);
+    background-size: 100% 4px; }
   body[data-theme="bright"] #clock {
     background: linear-gradient(to bottom, #080808, #080808 50%, #686800 50%, #686800);
+    background-size: 100% 4px; }
+  body[data-theme="modx"] #clock {
+    background: linear-gradient(to bottom, #080808, #080808 50%, #123046 50%, #123046);
     background-size: 100% 4px; }
   body[data-theme="royal"] #clock {
     background: linear-gradient(to bottom, #080808, #080808 50%, #300070 50%, #300070);
     background-size: 100% 4px; }
+  body[data-theme="modx"] #clock {
+    background: linear-gradient(to bottom, #080808, #080808 50%, #123046 50%, #123046);
+    background-size: 100% 4px; }
   body[data-theme="neon"] #clock {
     background: linear-gradient(to bottom, #080808, #080808 50%, #38003f 50%, #38003f);
     background-size: 100% 4px; }
+  body[data-theme="modx"] #clock {
+    background: linear-gradient(to bottom, #080808, #080808 50%, #123046 50%, #123046);
+    background-size: 100% 4px; }
   body[data-theme="sterc"] #clock {
     background: linear-gradient(to bottom, #080808, #080808 50%, #340a19 50%, #340a19);
+    background-size: 100% 4px; }
+  body[data-theme="modx"] #clock {
+    background: linear-gradient(to bottom, #080808, #080808 50%, #123046 50%, #123046);
     background-size: 100% 4px; }
 
 body {
@@ -88,20 +111,29 @@ body {
   min-height: 100vh;
   margin: 0;
   background: linear-gradient(to bottom, #080808, #080808 50%, #162c07 50%, #162c07); }
-  body[data-theme="modx"]:after {
-    display: block;
-    content: " ";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: red;
-    z-index: 0;
-    -webkit-animation: MODX-CYCLE-BG 12s infinite alternate;
-            animation: MODX-CYCLE-BG 12s infinite alternate;
+  body[data-theme="modx"] {
     background: linear-gradient(to bottom, #080808, #080808 50%, #307eb7 50%, #307eb7);
-    background-size: 100% 4px; }
+    /*&:after {
+      display:block;
+      content:" ";
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      bottom:0;
+      background:red;
+      z-index:0;
+      animation: MODX-CYCLE-BG 12s infinite alternate;
+      //display:none;
+      background: linear-gradient(
+        to bottom,
+        $black,
+        $black 50%,
+        darken(rgb(91,161,212),14%) 50%,
+        darken(rgb(91,161,212),14%)
+      );
+      background-size: 100% 4px;
+    }*/ }
 
 svg {
   fill: #86f23b;
@@ -127,6 +159,9 @@ svg {
   body[data-theme="sterc"] svg {
     fill: #d62a68;
     outline: #d62a68; }
+  body[data-theme="modx"] svg {
+    -webkit-animation: MODX-CYCLE-FILL 24s infinite alternate;
+            animation: MODX-CYCLE-FILL 24s infinite alternate; }
 
 #meridian {
   z-index: 0;
@@ -152,6 +187,9 @@ svg {
   left: 0;
   right: 0;
   bottom: 0; }
+  #digits .alarming .digit.separator {
+    -webkit-animation: none;
+            animation: none; }
   #digits > div:not(.digit) {
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -195,9 +233,6 @@ svg {
         -ms-transform: scale(1.4);
             transform: scale(1.4);
     width: 100%; }
-    body[data-theme="modx"] .digit svg {
-      -webkit-animation: MODX-CYCLE-FILL 24s infinite alternate;
-              animation: MODX-CYCLE-FILL 24s infinite alternate; }
 
 #daysoftheweek {
   position: absolute;
