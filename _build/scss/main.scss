@@ -21,8 +21,8 @@ $themes:(
   ),
   bright:(
     bg:$black,
-    stripe:darken(rgb(255,255,12),32%),
-    fill:rgb(255,255,12)
+    stripe:darken(rgb(255,174,12),42%),
+    fill:rgb(255,174,12)
   ),
   royal:(
     bg:$black,
@@ -38,6 +38,11 @@ $themes:(
     bg:$black,
     stripe:darken(rgb(214,42,104),38%),
     fill:rgb(214,42,104)
+  ),
+  pier31:(
+    bg:white,
+    stripe:darken(#7390A1,38%),
+    fill:#B5230B
   )
 );
 
@@ -49,6 +54,9 @@ $themes:(
   background:linear-gradient(to bottom, rgba(0,0,0,1) 0%,rgba(0,0,0,0) 50%,rgba(0,0,0,1) 100%);
   body[data-theme="invert"] & {
     background:linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 50%,rgba(255,255,255,1) 100%);
+  }
+  body[data-theme="pier31"] & {
+    background:linear-gradient(to bottom, rgba(lighten(#7390A1,12%),.86) 0%,rgba(lighten(#7390A1,12%),0) 50%,rgba(lighten(#7390A1,12%),.86) 100%);
   }
 }
 
@@ -123,6 +131,31 @@ h1,h2,h3,h4,h5,h6 {
   }
 }
 
+#status-bar {
+  font-size:1.2em;
+  display:flex;
+  justify-content:center;
+  > div {
+    width:76vw;
+    display:flex;
+  }
+  h2 {
+    position:relative;
+    flex-basis:3em;
+    &.lit {
+      z-index:$topMost + 1;
+    }
+  }
+  svg {
+    position:absolute;
+    top:1em;
+    left:0;
+    right:0;
+    height:4em;
+
+  }
+}
+
 #clock {
   width:100vw;
   @include striped-bg();
@@ -178,6 +211,7 @@ body {
 svg {
   fill:$green;
   outline:$green;
+  transition:fill ease 2400ms, outline ease 2400ms;
   @each $name, $theme in $themes {
     body[data-theme="#{$name}"] & {
       fill:map-get($theme,fill);
@@ -185,7 +219,7 @@ svg {
     }
   }
   body[data-theme="modx"] & {
-    animation:MODX-CYCLE-FILL 24s infinite alternate;
+    animation:MODX-CYCLE-FILL 42s infinite alternate;
   }
 }
 
@@ -280,9 +314,12 @@ svg {
 
 #daysoftheweek {
   position:absolute;
-  bottom:6vh;
+  bottom:7vh;
   left:0;
   right:0;
+  body[data-theme="pier31"] & {
+    z-index:$topMost;
+  }
   .week {
     display:flex;
     justify-content:center;
@@ -295,7 +332,7 @@ svg {
 
 .weekday {
   padding:0 0.2em;
-  min-width:3em;
+  flex-basis:3em;
   opacity:0.42;
   transition:opacity 240ms ease;
   &.today {

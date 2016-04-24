@@ -1,8 +1,136 @@
 document.querySelector('html').classList.remove('no-js');
-if(localStorage.getItem('NightAir__theme')) {
-  //console.log(localStorage.getItem('NightAir__theme'));
-  document.body.setAttribute('data-theme',localStorage.getItem('NightAir__theme'));
+
+let __NightAirModel = null;
+
+class NightAirModel {
+    constructor() {
+        this.settingAlarm = false;
+        this.fullscreenMode = false;
+        this.commandKeyDown = false;
+        this.alarming = false;
+        this.suppressAlarm = false;
+        // pull releveant properties out of localStorage
+        this.mondayFirst = this.getBooleanLocalStorageItem('NightAir__mondayFirst',false);
+        this.militaryTime = this.getBooleanLocalStorageItem('NightAir__militaryTime',false);
+        this.notify = this.getBooleanLocalStorageItem('NightAir__notify',true);
+        this.allowFullscreen = this.getBooleanLocalStorageItem('NightAir__allowFullscreen',true);
+        this.alarmEnabled = this.getBooleanLocalStorageItem('NightAir__alarmEnabled',true);
+        this.theme = this.getLocalStorageItem('NightAir__theme','default');
+        this.alarmTime = (function(that){ // set alarm time to stored value or 00:00
+          var storage = that.getLocalStorageItem('NightAir__alarm');
+          var date = new Date();
+          if(storage) {
+            date = new Date(parseInt(storage));
+          } else {
+            date.setHours(0);
+            date.setMinutes(0);
+          }
+          date.setSeconds(0);
+          date.setMilliseconds(0);
+
+          return date;
+        })(this);
+        if(!__NightAirModel){
+              __NightAirModel = this;
+        }
+
+        return __NightAirModel;
+    }
+    getInstance() {
+      return __NightAirModel || new NightAirModel();
+    }
+    getLocalStorageItem(n, d) {
+      try {
+        return (localStorage.getItem(n) || d);
+      } catch (e) {
+        return d;
+      }
+    }
+    getBooleanLocalStorageItem(n,d) {
+      return JSON.parse(this.getLocalStorageItem(n,d));
+    }
+    getSettingAlarm() {
+      return this.settingAlarm;
+    }
+    setSettingAlarm(val) {
+      this.settingAlarm = val;
+    }
+    getFullscreenMode() {
+      return this.fullscreenMode;
+    }
+    setFullscreenMode(val) {
+      this.fullscreenMode = val;
+    }
+    getCommandKeyDown() {
+      return this.commandKeyDown;
+    }
+    setCommandKeyDown(val) {
+      this.commandKeyDown = val;
+    }
+    getAlarming() {
+      return this.alarming;
+    }
+    setAlarming(val) {
+      this.alarming = val;
+    }
+    getSuppressAlarm() {
+      return this.suppressAlarm;
+    }
+    setSuppressAlarm(val) {
+      this.suppressAlarm = val;
+    }
+    getMondayFirst() {
+      return this.mondayFirst;
+    }
+    setMondayFirst(val) {
+      this.mondayFirst = val;
+    }
+    getMilitaryTime() {
+      return this.militaryTime;
+    }
+    setMilitaryTime(val) {
+      this.militaryTime = val;
+    }
+    getNotify() {
+      return this.notify;
+    }
+    setNotify(val) {
+      this.notify = val;
+    }
+    getAllowFullscreen() {
+      return this.allowFullscreen;
+    }
+    setAllowFullscreen(val) {
+      this.allowFullscreen = val;
+    }
+    getAlarmEnabled() {
+      return this.alarmEnabled;
+    }
+    setAlarmEnabled(val) {
+      this.alarmEnabled = val;
+      localStorage.setItem('NightAir__alarmEnabled',val);
+    }
+    getAlarmTime() {
+      return this.alarmTime;
+    }
+    setAlarmTime(val) {
+      val = new Date(val);
+      this.alarmTime = val;
+      localStorage.setItem('NightAir__alarm',val.getTime());
+    }
+    getTheme() {
+      return this.theme;
+    }
+    setTheme(val) {
+      this.theme = val;
+      localStorage.setItem('NightAir__theme',val);
+    }
 }
+
+var nightAirModel = new NightAirModel().getInstance();
+console.log(nightAirModel);
+
+document.body.setAttribute('data-theme',nightAirModel.getTheme());
 
 function tick() {
   setTimeout(function(){ // wait until the next whole second to start the blinking so it syncs with the seconds
@@ -12,48 +140,60 @@ function tick() {
 
 tick();
 
-var mondayFirst = false, // will eventually be user facing
-militaryTime = false,
-settingAlarm = false,
-fullscreenMode = false,
-commandKeyDown = false,
-alarming = false,
-suppressAlarm = false,
-alarmTime = (function(){
-  var storage = localStorage.getItem('NightAir__alarm') || undefined;
-  var date = new Date();
-  if(storage) {
-    date = new Date(parseInt(storage));
-  } else {
-    date.setHours(0);
-    date.setMinutes(0);
+function pushNotification(title,body,icon,timeout) {
+  if(!nightAirModel.getNotify()) return;
+  timeout = (timeout == undefined) ? 4200 : timeout;
+  // Let's check if the browser supports notifications
+  if (!("Notification" in window)) {
+    console.log("This browser does not support system notifications");
+    nightAirModel.setNotify(false);
+    return;
   }
-  date.setSeconds(0);
-  date.setMilliseconds(0);
 
-  return date;
-})();
-var clockDOM = document.querySelector('#clock'); // this is the current displaying video
+  // Let's check whether notification permissions have already been granted
+  else if (Notification.permission === "granted") {
+    // If it's okay let's create a notification
+    var options = {
+      body: body,
+      icon: icon
+    }
+    var notification = new Notification(title,options);
+    setTimeout(notification.close.bind(notification), timeout);
+  }
 
-function setAlarmTime(date) {
-  alarmTime = date;
-  localStorage.setItem('NightAir__alarm',alarmTime.getTime());
+  // Otherwise, we need to ask the user for permission
+  else if (Notification.permission !== 'denied') {
+    Notification.requestPermission(function (permission) {
+      // If the user accepts, let's create a notification
+      if (permission === "granted") {
+        var notification = new Notification(title,options);
+        setTimeout(notification.close.bind(notification), timeout);
+      }
+    });
+  }
 }
+
+pushNotification('Notifications Enabled','You\'ll be notified when the alarm sounds.');
+
+var clockDOM = document.querySelector('#clock'); // this is the current displaying video
 
 function setTheme(theme) {
   document.body.setAttribute('data-theme',theme);
-  localStorage.setItem('NightAir__theme',theme);
+  nightAirModel.setTheme(theme);
 }
 
 document.addEventListener("keypress", function(e){
-  //console.log(e.keyCode);
-  switch(e.keyCode) {
+  //console.log(e.keyCode,e.charCode);
+  var alarming = nightAirModel.getAlarming(),
+  alarmTime = nightAirModel.getAlarmTime();
+  if(alarming) nightAirModel.setAlarming(false);
+  switch(e.charCode) {
     case 32:
-    settingAlarm = true;
+    nightAirModel.setSettingAlarm(true);
     break;
 
     case 91:
-    commandKeyDown = true;
+    nightAirModel.setCommandKeyDown(true);
     break;
 
     case 161:
@@ -95,25 +235,35 @@ document.addEventListener("keypress", function(e){
     case 104:
     case 38:
     case 72:
-    if(settingAlarm) setAlarmTime(new Date(alarmTime.getTime() + (1000 * 60 * 60)));
+    if(nightAirModel.getSettingAlarm()) nightAirModel.setAlarmTime(new Date(alarmTime.getTime() + (1000 * 60 * 60)));
     break;
 
     case 109:
     case 39:
     case 77:
-    if(settingAlarm) setAlarmTime(new Date(alarmTime.getTime() + (1000 * 60)));
+    if(nightAirModel.getSettingAlarm()) nightAirModel.setAlarmTime(new Date(alarmTime.getTime() + (1000 * 60)));
+    break;
+
+    case 229:
+    nightAirModel.setAlarmEnabled(!nightAirModel.getAlarmEnabled());
+    break;
+
+    case 402: // fullscreen mode
+    if(nightAirModel.getAllowFullscreen()) toggleFullscreen();
     break;
   }
 });
 
 document.addEventListener("keyup", function(e){
+  var settingAlarm = nightAirModel.getSettingAlarm(),
+  alarmTime = nightAirModel.getAlarmTime();
   switch(e.keyCode) {
     case 32:
-    settingAlarm = false;
+    nightAirModel.setSettingAlarm(false);
     break;
 
     case 91:
-    commandKeyDown = true;
+    nightAirModel.setCommandKeyDown(false);
     break;
 
     case 38:
@@ -127,18 +277,37 @@ document.addEventListener("keyup", function(e){
 });
 
 function doAlarm() {
-  if(settingAlarm || suppressAlarm) return;
-  //console.log('ALARM!');
-  alarming = true;
-  suppressAlarm = true;
+  var settingAlarm = nightAirModel.getSettingAlarm(),
+  suppressAlarm = nightAirModel.getSuppressAlarm(),
+  alarmEnabled = nightAirModel.getAlarmEnabled(),
+  notify = nightAirModel.getNotify(),
+  alarmTime = nightAirModel.getAlarmTime();
+  if(settingAlarm || suppressAlarm || !alarmEnabled) return;
+  nightAirModel.setAlarming(true);
+  nightAirModel.setSuppressAlarm(true);
+  if(notify) pushNotification('Beep Beep!','You\'re ' + getAlarmDisplayTime() + ' alarm is sounding.',undefined,60000);
+  function getAlarmDisplayTime() {
+    var h = alarmTime.getHours(),
+    m = alarmTime.getMinutes(),
+    militaryTime = nightAirModel.getMilitaryTime(),
+    mer = (!militaryTime) ? 'am' : '';
+    if(!militaryTime) {
+      if(alarmTime.getHours() > 12) {
+        mer = 'pm';
+      }
+    } else {
+      if(h < 10) h = '0' + h.toString();
+    }
+    return h + ':' + m + mer;
+  }
 }
 
 var Digits = React.createClass({ // the clock display, made up if <Digit>s
   render:function(){
     var now = this.getTime();
     var cls = '';
-    if(settingAlarm) cls = 'settingAlarm';
-    if(alarming) cls = 'alarming';
+    if(nightAirModel.getAlarming()) cls = 'alarming';
+    else if(nightAirModel.getSettingAlarm()) cls = 'settingAlarm';
     if(this.shouldAlarm()) doAlarm();
     return (
       <div className={cls}>
@@ -154,11 +323,15 @@ var Digits = React.createClass({ // the clock display, made up if <Digit>s
     );
   },
   shouldAlarm:function(){
-    var now = new Date();
+    var now = new Date(),
+    alarmTime = nightAirModel.getAlarmTime();
     return (alarmTime.getHours() === now.getHours() && alarmTime.getMinutes() === now.getMinutes()) ? true : false;
   },
   getTime:function(){
-    var now = (settingAlarm) ? alarmTime : new Date();
+    var settingAlarm = nightAirModel.getSettingAlarm(),
+    alarmTime = nightAirModel.getAlarmTime(),
+    alarming = nightAirModel.getAlarming(),
+    now = (settingAlarm) ? alarmTime : new Date();
 
     if(alarming) {
       now.setSeconds(0);
@@ -167,7 +340,7 @@ var Digits = React.createClass({ // the clock display, made up if <Digit>s
 
     var hours = (function(){
       var h = now.getHours();
-      if(!militaryTime && h > 12) h -= 12;
+      if(!nightAirModel.getMilitaryTime() && h > 12) h -= 12;
       return h;
     })().toString().split('');
     var minutes = now.getMinutes().toString().split('');
@@ -186,7 +359,7 @@ var Digits = React.createClass({ // the clock display, made up if <Digit>s
       s2:digitToWord(seconds[1])
     }
 
-    function digitToWord(digit) {
+    function digitToWord(digit) { // accepts "0" returns "zero"
       return ['zero','one','two','three','four','five','six','seven','eight','nine'][parseInt(digit)];
     }
   }
@@ -306,7 +479,7 @@ var WeekDays = React.createClass({ // weekdays display ticker made up of <Weekda
     );
 
     var cls = 'week ';
-    if(mondayFirst) cls += 'monfirst'; // uses flex order to change the visual order
+    if(nightAirModel.getMondayFirst()) cls += 'monfirst'; // uses flex order to change the visual order
 
     return (
       <div className={cls}>
@@ -319,7 +492,7 @@ var WeekDays = React.createClass({ // weekdays display ticker made up of <Weekda
 var Meridian = React.createClass({
   getAnteMeridiem(){
     return ((function(){
-      if(settingAlarm) return alarmTime;
+      if(nightAirModel.getSettingAlarm()) return nightAirModel.getAlarmTime();
       return new Date();
     })().getHours() < 12) ? true : false;
   },
@@ -329,7 +502,7 @@ var Meridian = React.createClass({
   render:function(){
     var xlink = "assets/img/art.svg#icon-" + (this.getAnteMeridiem() ? 'am' : 'pm'),
     title = (this.props.anteMeridiem ? 'AM' : 'PM');
-    if(militaryTime) return null;
+    if(nightAirModel.getMilitaryTime()) return null;
     return (
       <h3>
         <svg x="0px" y="0px" viewBox="0 0 24 42" enable-background="new 0 0 24 42">
@@ -353,7 +526,7 @@ var Player = React.createClass({
     };
   },
   render: function() {
-    if(!alarming) return (<div></div>);
+    if(!nightAirModel.getAlarming()) return (<div></div>);
     return (
       <div>
         <audio autoPlay={this.props.autoplay} loop={this.props.loop} muted={this.props.muted} controls={this.props.controls}>
@@ -365,49 +538,90 @@ var Player = React.createClass({
   }
 });
 
+var StatusBar = React.createClass({
+  getDefaultProps:function(){
+    return {};
+  },
+  render:function(){
+    var alarmEnabled = nightAirModel.getAlarmEnabled();
+    return (
+      <div>
+        <StatusIcon id="bell" lit={alarmEnabled} />
+      </div>
+    );
+  }
+});
+
+var StatusIcon = React.createClass({
+  getDefaultProps:function(){
+    return {
+      id:"bell",
+      path:"M25.2,22.9c0,0.1-0.1,0.1-0.1,0.1h-4.7c-0.1,0-0.1,0-0.1-0.1s0-0.1,0.1-0.1c0,0,0.3-0.1,0.6-0.4c0.3-0.3,0.4-0.8,0.4-1.8c0-0.8,0.3-1.2,0.6-1.4c0.1-0.1,0.2-0.1,0.3-0.2c0,0,0,0,0-0.1c0-0.3,0.2-0.5,0.5-0.5s0.5,0.2,0.5,0.5c0,0,0,0,0,0.1c0.1,0,0.2,0.1,0.3,0.2c0.3,0.2,0.6,0.6,0.6,1.4c0,1,0.1,1.5,0.4,1.8s0.6,0.4,0.6,0.4C25.1,22.8,25.2,22.8,25.2,22.9zM23.1,23.2h-1c-0.1,0-0.1,0.1-0.1,0.1c0,0.3,0.3,0.6,0.6,0.6s0.6-0.3,0.6-0.6C23.3,23.3,23.2,23.2,23.1,23.2z",
+      lit:false
+    };
+  },
+  render:function(){
+    var cls = this.props.id;
+    if(this.props.lit) cls += ' lit';
+    return (
+        <h2 className={cls}>
+          <svg id="bell" x="0px" y="0px" viewBox="0 0 42 42" enable-background="new 0 0 42 42">
+            <defs>
+                <filter id="f1"  x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur in="SourceGraphic" stdDeviation=".42" />
+                </filter>
+            </defs>
+            <path id={this.props.id + '_blur'} filter="url(#f1)" d={this.props.path}/>
+            <path id={this.props.id} d={this.props.path}/>
+          </svg>
+        </h2>
+    );
+  }
+});
+
 var digitsDOM = document.getElementById('digits'),
 weekdaysDOM = document.getElementById('daysoftheweek'),
 meridianDOM = document.getElementById('meridian'),
-playerDOM = document.getElementById('player');
+playerDOM = document.getElementById('player'),
+statusBarDOM = document.getElementById('status-bar');
 function step(timestamp) { // tick tock
   ReactDOM.render(<Digits />, digitsDOM);
   ReactDOM.render(<WeekDays />, weekdaysDOM);
   ReactDOM.render(<Meridian />, meridianDOM);
   ReactDOM.render(<Player />, playerDOM);
+  ReactDOM.render(<StatusBar />, statusBarDOM);
 
   window.requestAnimationFrame(step);
 }
 
 window.requestAnimationFrame(step);
 
-(function(){
-  var pfx = ["webkit", "moz", "ms", "o", ""];
-  function RunPrefixMethod(obj, method) {
-      var p = 0, m, t;
-      while (p < pfx.length && !obj[m]) {
-          m = method;
-          if (pfx[p] == "") {
-              m = m.substr(0,1).toLowerCase() + m.substr(1);
-          }
-          m = pfx[p] + m;
-          t = typeof obj[m];
-          if (t != "undefined") {
-              pfx = [pfx[p]];
-              return (t == "function" ? obj[m]() : obj[m]);
-          }
-          p++;
-      }
-  }
 
-
-  clockDOM.onclick = function() {
-    if (RunPrefixMethod(document, "FullScreen") || RunPrefixMethod(document, "IsFullScreen")) {
-        RunPrefixMethod(document, "CancelFullScreen");
-        fullscreenMode = false;
-    }
-    else {
-        RunPrefixMethod(clockDOM, "RequestFullScreen");
-        fullscreenMode = true;
+function RunPrefixMethod(obj, method) {
+    var pfx = ["webkit", "moz", "ms", "o", ""];
+    var p = 0, m, t;
+    while (p < pfx.length && !obj[m]) {
+        m = method;
+        if (pfx[p] == "") {
+            m = m.substr(0,1).toLowerCase() + m.substr(1);
+        }
+        m = pfx[p] + m;
+        t = typeof obj[m];
+        if (t != "undefined") {
+            pfx = [pfx[p]];
+            return (t == "function" ? obj[m]() : obj[m]);
+        }
+        p++;
     }
 }
-})();
+
+function toggleFullscreen() {
+  if (RunPrefixMethod(document, "FullScreen") || RunPrefixMethod(document, "IsFullScreen")) {
+      RunPrefixMethod(document, "CancelFullScreen");
+      nightAirModel.setFullscreenMode(false);
+  }
+  else {
+      RunPrefixMethod(clockDOM, "RequestFullScreen");
+      nightAirModel.setFullscreenMode(true);
+  }
+}
