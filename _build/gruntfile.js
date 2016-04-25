@@ -120,7 +120,7 @@ module.exports = function(grunt) {
             plugins: ['transform-react-jsx'],
              transform: [
                 ["babelify", {
-
+                  presets: ['es2015', 'react']
                 }]
              ]
           },
